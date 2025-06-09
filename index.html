@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Iframe Converter</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 800px; 
+            margin: 50px auto; 
+            padding: 20px; 
+            line-height: 1.6;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        textarea { 
+            width: 100%; 
+            height: 100px; 
+            margin: 10px 0 20px 0; 
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        textarea:focus {
+            border-color: #0078d4;
+            outline: none;
+        }
+        button { 
+            background: #0078d4; 
+            color: white; 
+            padding: 12px 24px; 
+            border: none; 
+            border-radius: 4px;
+            cursor: pointer; 
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        button:hover {
+            background: #106ebe;
+        }
+        button:focus {
+            outline: 2px solid #0078d4;
+            outline-offset: 2px;
+        }
+        .success {
+            color: #107c10;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .error {
+            color: #d13438;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        #status {
+            min-height: 24px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Video Iframe Converter</h1>
+    <p>This tool converts standard iframe embed codes into responsive, accessible versions that scale to fit any screen size.</p>
+    
+    <label for="input">Paste your iframe code below:</label>
+    <textarea id="input" placeholder="Paste iframe code here..." aria-describedby="input-help"></textarea>
+    <p id="input-help">Paste the iframe embed code you copied from your video hosting platform.</p>
+    
+    <button onclick="convert()" type="button">Convert to Responsive</button>
+    
+    <div id="status" role="status" aria-live="polite"></div>
+    
+    <label for="output">Responsive iframe code:</label>
+    <textarea id="output" readonly aria-describedby="output-help"></textarea>
+    <p id="output-help">Copy this code and paste it into your webpage. The video will automatically resize to fit the available width.</p>
+    
+    <script>
+        function convert() {
+            const input = document.getElementById('input').value.trim();
+            const output = document.getElementById('output');
+            const status = document.getElementById('status');
+            
+            // Clear previous status
+            status.textContent = '';
+            status.className = '';
+            
+            if (!input) {
+                status.textContent = 'Please paste an iframe code first.';
+                status.className = 'error';
+                return;
+            }
+            
+            const titleMatch = input.match(/title='([^']*)'/) || input.match(/title="([^"]*)"/);
+            const srcMatch = input.match(/src="([^"]*)"/);
+            
+            if (titleMatch && srcMatch) {
+                const title = titleMatch[1];
+                const src = srcMatch[1];
+                const convertedCode = `<div style="width: 100%; aspect-ratio: 16 / 9;">
+  <iframe title="${title}" src="${src}" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen loading="lazy" style="width: 100%; height: 100%;"></iframe>
+</div>`;
+                output.value = convertedCode;
+                status.textContent = 'Conversion successful! The responsive iframe code is ready to copy.';
+                status.className = 'success';
+                
+                // Select the output for easy copying
+                output.select();
+            } else {
+                status.textContent = 'Invalid iframe code. Please make sure you pasted a complete iframe element with title and src attributes.';
+                status.className = 'error';
+                output.value = '';
+            }
+        }
+        
+        // Allow Enter key to trigger conversion when focused on input
+        document.getElementById('input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                convert();
+            }
+        });
+    </script>
+</body>
+</html>
