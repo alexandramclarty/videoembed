@@ -100,7 +100,12 @@
             if (titleMatch && srcMatch) {
                 const title = titleMatch[1];
                 const src = srcMatch[1];
-                const convertedCode = `<div style="width: 100%; max-width: 800px; aspect-ratio: 16 / 9; margin: auto;">
+                const convertedCode = `<style>
+[id*="ScriptEditorWebPart"] .ms-Fabric > div[class*="placeholder_"]:first-child {
+    display: none;
+    }
+</style>
+<div style="width: 100%; aspect-ratio: 16 / 9; margin: auto;">
   <iframe title="${title}" src="${src}" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen loading="lazy" style="width: 100%; height: 100%;">
     <p>Your browser does not support iframes. <a href="${src}">View the video directly</a>.</p>
   </iframe>
